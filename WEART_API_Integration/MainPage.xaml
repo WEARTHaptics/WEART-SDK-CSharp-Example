@@ -1,0 +1,31 @@
+﻿<Page
+    x:Class="WEART_API_Integration.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WEART_API_Integration"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Background="LightGray">
+        <Button x:Name="StartClient" Background="Black" Margin="100,80,0,0" VerticalAlignment="Top" Click="StartClient_Click">
+            Start Client
+        </Button>
+        <Button x:Name="StopClient" Background="Black" Margin="230,80,0,0" VerticalAlignment="Top" Click="StopClient_Click">
+            Stop Client
+        </Button>
+        <Button x:Name="AddEffectSampl1" Background="Black" Margin="100,255,0,0" VerticalAlignment="Top" Click="AddEffectSample1_Click">
+            Add Effect Sample 1
+        </Button>
+        <Button x:Name="AddEffectSample2" Background="Black" Margin="100,320,0,0" VerticalAlignment="Top" Click="AddEffectSample2_Click">
+            Add Effect Sample 2
+        </Button>
+        <Button x:Name="AddEffectSample3" Background="Black" Margin="100,390,0,0" VerticalAlignment="Top" Click="AddEffectSample3_Click">
+            Add Effect Sample 3
+        </Button>
+        <Button x:Name="RemoveEffects" Background="Black" Margin="100,468,0,0" VerticalAlignment="Top" Click="RemoveEffects_Click">
+            Remove Effects
+        </Button>
+    </Grid>
+</Page>
