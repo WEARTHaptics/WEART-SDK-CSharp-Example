@@ -19,6 +19,7 @@ namespace WEART_API_Integration
         private WeArtClient _weartClient;
         private TouchEffect _effect;
         private WeArtHapticObject _hapticObject;
+        private WeArtThimbleTrackingObject _thimbleTrackingObject;
 
         public MainPage()
         {
@@ -35,8 +36,22 @@ namespace WEART_API_Integration
             _effect = new TouchEffect();
 
             _hapticObject = new WeArtHapticObject(_weartClient);
-            _hapticObject.HandSides = HandSideFlags.Right;
-            _hapticObject.ActuationPoints = ActuationPointFlags.Index;
+            _hapticObject.HandSides = HandSideFlags.Right; // HandSideFlags.Left;
+            _hapticObject.ActuationPoints = ActuationPointFlags.Index;  //ActuationPointFlags.Middle| ActuationPointFlags.Thumb
+
+            _thimbleTrackingObject = new WeArtThimbleTrackingObject(_weartClient);
+            _thimbleTrackingObject.HandSide = HandSide.Right;
+            _thimbleTrackingObject.ActuationPoint = ActuationPoint.Index;
+
+            // schedule timer tracking
+            System.Timers.Timer timer = new System.Timers.Timer();
+            timer.Interval = 1000; //Milliseconds
+            timer.AutoReset = true;
+            timer.Elapsed += async (sender_, e_) =>
+            {
+                WeArtLog.Log($"WeArtThimbleTrackingObject Right-Index closure: {_thimbleTrackingObject.Closure.Value}");
+            };
+            timer.Start();
 
         }
 
@@ -146,8 +161,6 @@ namespace WEART_API_Integration
 
         private void AddEffectSample1_Click(object sender, RoutedEventArgs e)
         {
-            WeArtLog.Log("AddEffectSampl1_Click\n");
-
             Temperature temperature = Temperature.Default;
             temperature.Active = true;
             temperature.Value = 0.2f;
@@ -161,6 +174,9 @@ namespace WEART_API_Integration
             texture.TextureType = TextureType.ProfiledAluminiumMeshFast;
 
             _effect.Set(temperature, force, texture);
+
+            if (_hapticObject.ActiveEffect == null)
+                _hapticObject.AddEffect(_effect);
         }
 
 
@@ -179,6 +195,9 @@ namespace WEART_API_Integration
             texture.TextureType = TextureType.ProfiledAluminiumMeshFast;
 
             _effect.Set(temperature, force, texture);
+
+            if (_hapticObject.ActiveEffect == null)
+                _hapticObject.AddEffect(_effect);
         }
 
         private void AddEffectSample3_Click(object sender, RoutedEventArgs e)
@@ -196,6 +215,9 @@ namespace WEART_API_Integration
             texture.TextureType = TextureType.ProfiledAluminiumMeshFast;
 
             _effect.Set(temperature, force, texture);
+
+            if (_hapticObject.ActiveEffect == null)
+                _hapticObject.AddEffect(_effect);
         }
 
         private void RemoveEffects_Click(object sender, RoutedEventArgs e)

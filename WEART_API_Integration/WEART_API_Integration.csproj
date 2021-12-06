@@ -138,6 +138,7 @@
     <Compile Include="WEART_SDK\WeArtNetwork.cs" />
     <Compile Include="WEART_SDK\WeArtTemperature.cs" />
     <Compile Include="WEART_SDK\WeArtTexture.cs" />
+    <Compile Include="WEART_SDK\WeArtThimbleTrackingObject.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
