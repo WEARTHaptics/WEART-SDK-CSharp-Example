@@ -29,21 +29,26 @@ namespace WEART_API_Integration
 
         private async void PageLoaded(object sender, RoutedEventArgs e)
         {
+            // create WEART Controller
             WeArtController weArtController = new WeArtController();
             _weartClient = weArtController.Client;
+            // handle state connection 
             _weartClient.OnConnectionStatusChanged += OnConnectionChanged;
 
+            // instantiate Effect 
             _effect = new TouchEffect();
 
+            // instantiate Haptic Object Right hand for Index Thimble
             _hapticObject = new WeArtHapticObject(_weartClient);
             _hapticObject.HandSides = HandSideFlags.Right; // HandSideFlags.Left;
             _hapticObject.ActuationPoints = ActuationPointFlags.Index;  //ActuationPointFlags.Middle| ActuationPointFlags.Thumb
 
+            // instantiate ThimbleTracking Object for Right hand - Index Thimble
             _thimbleTrackingObject = new WeArtThimbleTrackingObject(_weartClient);
             _thimbleTrackingObject.HandSide = HandSide.Right;
             _thimbleTrackingObject.ActuationPoint = ActuationPoint.Index;
 
-            // schedule timer tracking
+            // schedule timer to check tracking closure value
             System.Timers.Timer timer = new System.Timers.Timer();
             timer.Interval = 1000; //Milliseconds
             timer.AutoReset = true;
@@ -66,12 +71,15 @@ namespace WEART_API_Integration
 
         private void CreateEffect()
         {
+            // cerate defaults haptic components 
             Temperature temperature = Temperature.Default;
             Force force = Force.Default;
             Texture texture = Texture.Default;
 
+            // set proporties effect
             _effect.Set(temperature, force, texture);
 
+            // add effect to thimble index
             _hapticObject.AddEffect(_effect);
         }
 
@@ -151,30 +159,37 @@ namespace WEART_API_Integration
 
         private void StartClient_Click(object sender, RoutedEventArgs e)
         {
+            // run mode middleware
             _weartClient.Start();
         }
 
         private void StopClient_Click(object sender, RoutedEventArgs e)
         {
+            // stop and idle mode middleware
             _weartClient.Stop();
         }
 
         private void AddEffectSample1_Click(object sender, RoutedEventArgs e)
         {
+            // create temperature component
             Temperature temperature = Temperature.Default;
-            temperature.Active = true;
+            temperature.Active = true; // must be active to work
             temperature.Value = 0.2f;
 
+            // create force component
             Force force = Force.Default;
             force.Active = true;
             force.Value = 0.7f;
 
+            // create texture component
             Texture texture = Texture.Default;
             texture.Active = true;
             texture.TextureType = TextureType.ProfiledAluminiumMeshFast;
 
+            // effect set proporties 
             _effect.Set(temperature, force, texture);
 
+            // add effect if needed, to thimble 
             if (_hapticObject.ActiveEffect == null)
                 _hapticObject.AddEffect(_effect);
         }
@@ -182,46 +197,57 @@ namespace WEART_API_Integration
 
         private void AddEffectSample2_Click(object sender, RoutedEventArgs e)
         {
+            // create temperature component
             Temperature temperature = Temperature.Default;
             temperature.Active = true;
             temperature.Value = 0.6f;
 
+            // create force component
             Force force = Force.Default;
             force.Active = true;
             force.Value = 0.2f;
 
+            // create texture component
             Texture texture = Texture.Default;
             texture.Active = true;
             texture.TextureType = TextureType.ProfiledAluminiumMeshFast;
 
+            // effect set proporties
             _effect.Set(temperature, force, texture);
 
+            // add effect if needed, to thimble
             if (_hapticObject.ActiveEffect == null)
                 _hapticObject.AddEffect(_effect);
         }
 
         private void AddEffectSample3_Click(object sender, RoutedEventArgs e)
         {
+            // create temperature component
             Temperature temperature = Temperature.Default;
             temperature.Active = true;
             temperature.Value = 1.0f;
 
+            // create force component
             Force force = Force.Default;
             force.Active = true;
             force.Value = 1.0f;
 
+            // create texture component
             Texture texture = Texture.Default;
             texture.Active = true;
             texture.TextureType = TextureType.ProfiledAluminiumMeshFast;
 
+            // effect set proporties
             _effect.Set(temperature, force, texture);
 
+            // add effect if needed, to thimble
             if (_hapticObject.ActiveEffect == null)
                 _hapticObject.AddEffect(_effect);
         }
 
         private void RemoveEffects_Click(object sender, RoutedEventArgs e)
         {
+            // remove effects from thime
             _hapticObject.RemoveEffect(_effect);
         }
     }
