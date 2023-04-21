@@ -191,7 +191,7 @@ namespace WEART_API_Integration
         private void StartClient_Click(object sender, RoutedEventArgs e)
         {
             // run mode middleware
-            _weartClient.Start();
+            _weartClient.Start(TrackingType.DEFAULT);
         }
 
         private void StopClient_Click(object sender, RoutedEventArgs e)
