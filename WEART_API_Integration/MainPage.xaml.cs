@@ -48,6 +48,12 @@ namespace WEART_API_Integration
             _thimbleTrackingObject.HandSide = HandSide.Right;
             _thimbleTrackingObject.ActuationPoint = ActuationPoint.Index;
 
+            // handle calibration
+            _weartClient.OnCalibrationStart += OnCalibrationStart;
+            _weartClient.OnCalibrationFinish += OnCalibrationFinish;
+            _weartClient.OnCalibrationResultSuccess += (HandSide hand) => OnCalibrationResult(hand, true);
+            _weartClient.OnCalibrationResultFail += (HandSide hand) => OnCalibrationResult(hand, false);
+
             // schedule timer to check tracking closure value
             System.Timers.Timer timer = new System.Timers.Timer();
             timer.Interval = 1000; //Milliseconds
@@ -58,6 +64,31 @@ namespace WEART_API_Integration
             };
             timer.Start();
 
+        }
+
+        private void OnCalibrationStart(HandSide handSide)
+        {
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                CalibrationStatusText.Text = $"Calibrating {handSide.ToString().ToLower()} hand...";
+                StartCalibration.IsEnabled = false;
+            });
+        }
+
+        private void OnCalibrationFinish(HandSide handSide)
+        {
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                StartCalibration.IsEnabled = true;
+            });
+        }
+
+        private void OnCalibrationResult(HandSide handSide, bool success)
+        {
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                CalibrationStatusText.Text = $"Calibration for {handSide.ToString().ToLower()} hand {(success ? "completed" : "failed")}";
+            });
         }
 
         private void OnConnectionChanged(bool connected)
@@ -249,6 +280,11 @@ namespace WEART_API_Integration
         {
             // remove effects from thime
             _hapticObject.RemoveEffect(_effect);
+        }
+
+        private void StartCalibration_Click(object sender, RoutedEventArgs e)
+        {
+            _weartClient.StartCalibration();
         }
     }
 }
