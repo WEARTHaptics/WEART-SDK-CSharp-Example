@@ -19,17 +19,54 @@
             Calibrate
         </Button>
         <TextBlock x:Name="CalibrationStatusText" Margin="450,87,0,0" VerticalAlignment="Top" />
-        <Button x:Name="AddEffectSampl1" Margin="100,255,0,0" VerticalAlignment="Top" Click="AddEffectSample1_Click">
+        <Button x:Name="AddEffectSampl1" Margin="100,150,0,0" VerticalAlignment="Top" Click="AddEffectSample1_Click">
             Add Effect Sample 1
         </Button>
-        <Button x:Name="AddEffectSample2" Margin="100,320,0,0" VerticalAlignment="Top" Click="AddEffectSample2_Click">
+        <Button x:Name="AddEffectSample2" Margin="100,220,0,0" VerticalAlignment="Top" Click="AddEffectSample2_Click">
             Add Effect Sample 2
         </Button>
-        <Button x:Name="AddEffectSample3" Margin="100,390,0,0" VerticalAlignment="Top" Click="AddEffectSample3_Click">
+        <Button x:Name="AddEffectSample3" Margin="100,290,0,0" VerticalAlignment="Top" Click="AddEffectSample3_Click">
             Add Effect Sample 3
         </Button>
-        <Button x:Name="RemoveEffects" Margin="100,468,0,0" VerticalAlignment="Top" Click="RemoveEffects_Click">
+        <Button x:Name="RemoveEffects" Margin="100,360,0,0" VerticalAlignment="Top" Click="RemoveEffects_Click">
             Remove Effects
         </Button>
+
+        <StackPanel Orientation="Vertical" Margin="300,150,0,0">
+            <StackPanel Orientation="Horizontal" Height="40" Margin="0,0,0,0">
+                <TextBlock Text="Right Index Closure:" x:Name="LabelIndexRightClosure" FontSize="16" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <TextBlock Text="0.0" x:Name="ValueIndexRightClosure" FontSize="16" FontWeight="Bold" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Height="40" Margin="0,0,0,0">
+                <TextBlock Text="Right Thumb Closure:" x:Name="LabelThumbRightClosure" FontSize="16" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <TextBlock Text="0.0" x:Name="ValueThumbRightClosure" FontSize="16" FontWeight="Bold" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Height="40" Margin="0,0,0,0">
+                <TextBlock Text="Right Thumb Abduction:" x:Name="LabelThumbRightAbduction" FontSize="16" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <TextBlock Text="0.0" x:Name="ValueThumbRightAbduction" FontSize="16" FontWeight="Bold" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Height="40" Margin="0,0,0,0">
+                <TextBlock Text="Right Middle Closure:" x:Name="LabelMiddleRightClosure" FontSize="16" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <TextBlock Text="0.0" x:Name="ValueMiddleRightClosure" FontSize="16" FontWeight="Bold" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal" Height="40" Margin="0,0,0,0">
+                <TextBlock Text="Left Index Closure:" x:Name="LabelIndexLeftClosure" FontSize="16" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <TextBlock Text="0.0" x:Name="ValueIndexLeftClosure" FontSize="16" FontWeight="Bold" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Height="40" Margin="0,0,0,0">
+                <TextBlock Text="Left Thumb Closure:" x:Name="LabelThumbLeftClosure" FontSize="16" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <TextBlock Text="0.0" x:Name="ValueThumbLeftClosure" FontSize="16" FontWeight="Bold" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Height="40" Margin="0,0,0,0">
+                <TextBlock Text="Left Thumb Abduction:" x:Name="LabelThumbLeftAbduction" FontSize="16" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <TextBlock Text="0.0" x:Name="ValueThumbLeftAbduction" FontSize="16" FontWeight="Bold" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Height="40" Margin="0,0,0,0">
+                <TextBlock Text="Left Middle Closure:" x:Name="LabelMiddleLeftClosure" FontSize="16" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <TextBlock Text="0.0" x:Name="ValueMiddleLeftClosure" FontSize="16" FontWeight="Bold" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </Page>
