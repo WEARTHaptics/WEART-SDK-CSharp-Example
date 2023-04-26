@@ -6,6 +6,8 @@ using Windows.UI.Xaml.Controls;
 using WeArt.Components;
 using WeArt.Core;
 using WeArt.Utils;
+using System.Threading.Tasks;
+using System.Timers;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -19,7 +21,14 @@ namespace WEART_API_Integration
         private WeArtClient _weartClient;
         private TouchEffect _effect;
         private WeArtHapticObject _hapticObject;
-        private WeArtThimbleTrackingObject _thimbleTrackingObject;
+
+        private WeArtThimbleTrackingObject _leftIndexThimble;
+        private WeArtThimbleTrackingObject _leftThumbThimble;
+        private WeArtThimbleTrackingObject _leftMiddleThimble;
+
+        private WeArtThimbleTrackingObject _rightIndexThimble;
+        private WeArtThimbleTrackingObject _rightThumbThimble;
+        private WeArtThimbleTrackingObject _rightMiddleThimble;
 
         public MainPage()
         {
@@ -43,10 +52,14 @@ namespace WEART_API_Integration
             _hapticObject.HandSides = HandSideFlags.Right; // HandSideFlags.Left;
             _hapticObject.ActuationPoints = ActuationPointFlags.Index;  //ActuationPointFlags.Middle| ActuationPointFlags.Thumb
 
-            // instantiate ThimbleTracking Object for Right hand - Index Thimble
-            _thimbleTrackingObject = new WeArtThimbleTrackingObject(_weartClient);
-            _thimbleTrackingObject.HandSide = HandSide.Right;
-            _thimbleTrackingObject.ActuationPoint = ActuationPoint.Index;
+            // Instantiate thimbles for tracking
+            _leftIndexThimble = new WeArtThimbleTrackingObject(_weartClient, HandSide.Left, ActuationPoint.Index);
+            _leftThumbThimble = new WeArtThimbleTrackingObject(_weartClient, HandSide.Left, ActuationPoint.Thumb);
+            _leftMiddleThimble = new WeArtThimbleTrackingObject(_weartClient, HandSide.Left, ActuationPoint.Middle);
+            _rightIndexThimble = new WeArtThimbleTrackingObject(_weartClient, HandSide.Right, ActuationPoint.Index);
+            _rightThumbThimble = new WeArtThimbleTrackingObject(_weartClient, HandSide.Right, ActuationPoint.Thumb);
+            _rightMiddleThimble = new WeArtThimbleTrackingObject(_weartClient, HandSide.Right, ActuationPoint.Middle);
+
 
             // handle calibration
             _weartClient.OnCalibrationStart += OnCalibrationStart;
@@ -56,14 +69,10 @@ namespace WEART_API_Integration
 
             // schedule timer to check tracking closure value
             System.Timers.Timer timer = new System.Timers.Timer();
-            timer.Interval = 1000; //Milliseconds
+            timer.Interval = 200; //Milliseconds
             timer.AutoReset = true;
-            timer.Elapsed += async (sender_, e_) =>
-            {
-                WeArtLog.Log($"WeArtThimbleTrackingObject Right-Index closure: {_thimbleTrackingObject.Closure.Value}");
-            };
+            timer.Elapsed += OnTimerElapsed;
             timer.Start();
-
         }
 
         private void OnCalibrationStart(HandSide handSide)
@@ -98,6 +107,22 @@ namespace WEART_API_Integration
 
                 CreateEffect();
             }
+        }
+
+        private void OnTimerElapsed(object sender, ElapsedEventArgs e)
+        {
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                ValueIndexRightClosure.Text = _rightIndexThimble.Closure.Value.ToString();
+                ValueThumbRightClosure.Text = _rightThumbThimble.Closure.Value.ToString();
+                ValueThumbRightAbduction.Text = _rightThumbThimble.Abduction.Value.ToString();
+                ValueMiddleRightClosure.Text = _rightMiddleThimble.Closure.Value.ToString();
+
+                ValueIndexLeftClosure.Text = _leftIndexThimble.Closure.Value.ToString();
+                ValueThumbLeftClosure.Text = _leftThumbThimble.Closure.Value.ToString();
+                ValueThumbLeftAbduction.Text = _leftThumbThimble.Abduction.Value.ToString();
+                ValueMiddleLeftClosure.Text = _leftMiddleThimble.Closure.Value.ToString();
+            });
         }
 
         private void CreateEffect()
@@ -191,7 +216,7 @@ namespace WEART_API_Integration
         private void StartClient_Click(object sender, RoutedEventArgs e)
         {
             // run mode middleware
-            _weartClient.Start(TrackingType.DEFAULT);
+            _weartClient.Start();
         }
 
         private void StopClient_Click(object sender, RoutedEventArgs e)
