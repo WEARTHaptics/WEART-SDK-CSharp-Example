@@ -199,7 +199,7 @@ namespace WEART_API_Integration
                 Force = force;
 
                 // Texture
-                texture.VelocityZ = 0.5f;
+                texture.Velocity = 0.5f;
 
                 changed |= !Texture.Equals(texture);
                 Texture = texture;
