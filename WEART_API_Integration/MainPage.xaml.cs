@@ -158,6 +158,9 @@ namespace WEART_API_Integration
                     rawDataTrackers.Add((hs, ap), new WeArtRawSensorsDataTrackingObject(_weartClient, hs, ap));
                 }
             }
+            // Add default tracker callback
+            var key = (selectedHandSide, selectedActuationPoint);
+            if (rawDataTrackers.ContainsKey(key)) rawDataTrackers[key].DataReceived += RenderRawDataAsync;
         }
 
         private void HandSideChoice_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -185,7 +188,7 @@ namespace WEART_API_Integration
             if (rawDataTrackers.ContainsKey(newKey)) rawDataTrackers[newKey].DataReceived += RenderRawDataAsync;
         }
 
-        private void RenderRawDataAsync(SensorsData data)
+        private void RenderRawDataAsync(SensorData data)
         {
             Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
@@ -199,7 +202,7 @@ namespace WEART_API_Integration
 
                 TimeOfFlight.Text = data.TimeOfFlight.Distance.ToString();
 
-                LastSampleTime.Text = data.Timestamp.ToString();
+                LastSampleTime.Text = data.Timestamp.ToString("yyyy/MM/dd HH:mm:ss.fff");
             });
         }
         #endregion
