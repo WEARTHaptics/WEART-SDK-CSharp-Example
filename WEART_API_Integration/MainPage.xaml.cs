@@ -7,6 +7,9 @@ using WeArt.Components;
 using WeArt.Core;
 using System.Timers;
 using System.Collections.Generic;
+using WeArt.Messages;
+using static WeArt.Core.WeArtClient;
+using System.Diagnostics;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -20,8 +23,6 @@ namespace WEART_API_Integration
         private WeArtClient _weartClient;
         private TouchEffect _effect;
         private WeArtHapticObject _hapticObject;
-
-        
 
         public MainPage()
         {
@@ -50,9 +51,12 @@ namespace WEART_API_Integration
 
             // handle calibration
             _weartClient.OnCalibrationStart += OnCalibrationStart;
-            _weartClient.OnCalibrationFinish += OnCalibrationFinish;
             _weartClient.OnCalibrationResultSuccess += (HandSide hand) => OnCalibrationResult(hand, true);
             _weartClient.OnCalibrationResultFail += (HandSide hand) => OnCalibrationResult(hand, false);
+            _weartClient.OnMiddlewareStatusMessage+= (MiddlewareStatusMessage status) => UpdateUIBasedOnStatus(status.Status);
+
+            // Init controls
+            UpdateUIBasedOnStatus(MiddlewareStatus.DISCONNECTED);
 
             // schedule timer to check tracking closure value
             System.Timers.Timer timer = new System.Timers.Timer();
@@ -67,15 +71,6 @@ namespace WEART_API_Integration
             Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
                 CalibrationStatusText.Text = $"Calibrating {handSide.ToString().ToLower()} hand...";
-                StartCalibration.IsEnabled = false;
-            });
-        }
-
-        private void OnCalibrationFinish(HandSide handSide)
-        {
-            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-            {
-                StartCalibration.IsEnabled = true;
             });
         }
 
@@ -103,6 +98,25 @@ namespace WEART_API_Integration
             });
         }
 
+
+        private void UpdateUIBasedOnStatus(MiddlewareStatus status)
+        {
+            bool isRunning = status == MiddlewareStatus.RUNNING;
+
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                StartClient.IsEnabled = status != MiddlewareStatus.RUNNING && status != MiddlewareStatus.STARTING;
+                StopClient.IsEnabled = isRunning;
+                StartCalibration.IsEnabled = status == MiddlewareStatus.RUNNING;
+
+                AddEffectSampl1.IsEnabled = isRunning;
+                AddEffectSample2.IsEnabled = isRunning;
+                AddEffectSample3.IsEnabled = isRunning;
+                RemoveEffects.IsEnabled = isRunning;
+                ButtonStartRawData.IsEnabled = isRunning;
+                ButtonStopRawData.IsEnabled = isRunning;
+            });
+        }
         
 
         #region Closure/Abduction Tracking
@@ -231,6 +245,7 @@ namespace WEART_API_Integration
         {
             // stop and idle mode middleware
             _weartClient.Stop();
+            UpdateUIBasedOnStatus(MiddlewareStatus.DISCONNECTED);
         }
 
         private void AddEffectSample1_Click(object sender, RoutedEventArgs e)
