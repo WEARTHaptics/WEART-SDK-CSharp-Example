@@ -5,9 +5,8 @@ using Windows.UI.Xaml.Controls;
 
 using WeArt.Components;
 using WeArt.Core;
-using WeArt.Utils;
-using System.Threading.Tasks;
 using System.Timers;
+using System.Collections.Generic;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -22,13 +21,7 @@ namespace WEART_API_Integration
         private TouchEffect _effect;
         private WeArtHapticObject _hapticObject;
 
-        private WeArtThimbleTrackingObject _leftIndexThimble;
-        private WeArtThimbleTrackingObject _leftThumbThimble;
-        private WeArtThimbleTrackingObject _leftMiddleThimble;
-
-        private WeArtThimbleTrackingObject _rightIndexThimble;
-        private WeArtThimbleTrackingObject _rightThumbThimble;
-        private WeArtThimbleTrackingObject _rightMiddleThimble;
+        
 
         public MainPage()
         {
@@ -52,14 +45,8 @@ namespace WEART_API_Integration
             _hapticObject.HandSides = HandSideFlags.Right; // HandSideFlags.Left;
             _hapticObject.ActuationPoints = ActuationPointFlags.Index;  //ActuationPointFlags.Middle| ActuationPointFlags.Thumb
 
-            // Instantiate thimbles for tracking
-            _leftIndexThimble = new WeArtThimbleTrackingObject(_weartClient, HandSide.Left, ActuationPoint.Index);
-            _leftThumbThimble = new WeArtThimbleTrackingObject(_weartClient, HandSide.Left, ActuationPoint.Thumb);
-            _leftMiddleThimble = new WeArtThimbleTrackingObject(_weartClient, HandSide.Left, ActuationPoint.Middle);
-            _rightIndexThimble = new WeArtThimbleTrackingObject(_weartClient, HandSide.Right, ActuationPoint.Index);
-            _rightThumbThimble = new WeArtThimbleTrackingObject(_weartClient, HandSide.Right, ActuationPoint.Thumb);
-            _rightMiddleThimble = new WeArtThimbleTrackingObject(_weartClient, HandSide.Right, ActuationPoint.Middle);
-
+            InitTrackers();
+            InitRawDataTrackers();
 
             // handle calibration
             _weartClient.OnCalibrationStart += OnCalibrationStart;
@@ -104,7 +91,6 @@ namespace WEART_API_Integration
         {
             if (connected)
             {
-
                 CreateEffect();
             }
         }
@@ -113,17 +99,113 @@ namespace WEART_API_Integration
         {
             Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
-                ValueIndexRightClosure.Text = _rightIndexThimble.Closure.Value.ToString();
-                ValueThumbRightClosure.Text = _rightThumbThimble.Closure.Value.ToString();
-                ValueThumbRightAbduction.Text = _rightThumbThimble.Abduction.Value.ToString();
-                ValueMiddleRightClosure.Text = _rightMiddleThimble.Closure.Value.ToString();
-
-                ValueIndexLeftClosure.Text = _leftIndexThimble.Closure.Value.ToString();
-                ValueThumbLeftClosure.Text = _leftThumbThimble.Closure.Value.ToString();
-                ValueThumbLeftAbduction.Text = _leftThumbThimble.Abduction.Value.ToString();
-                ValueMiddleLeftClosure.Text = _leftMiddleThimble.Closure.Value.ToString();
+                RenderTrackingData();
             });
         }
+
+        
+
+        #region Closure/Abduction Tracking
+
+        private WeArtThimbleTrackingObject _leftIndexThimble;
+        private WeArtThimbleTrackingObject _leftThumbThimble;
+        private WeArtThimbleTrackingObject _leftMiddleThimble;
+
+        private WeArtThimbleTrackingObject _rightIndexThimble;
+        private WeArtThimbleTrackingObject _rightThumbThimble;
+        private WeArtThimbleTrackingObject _rightMiddleThimble;
+
+        private void InitTrackers()
+        {
+            // Instantiate thimbles for tracking
+            _leftIndexThimble = new WeArtThimbleTrackingObject(_weartClient, HandSide.Left, ActuationPoint.Index);
+            _leftThumbThimble = new WeArtThimbleTrackingObject(_weartClient, HandSide.Left, ActuationPoint.Thumb);
+            _leftMiddleThimble = new WeArtThimbleTrackingObject(_weartClient, HandSide.Left, ActuationPoint.Middle);
+            _rightIndexThimble = new WeArtThimbleTrackingObject(_weartClient, HandSide.Right, ActuationPoint.Index);
+            _rightThumbThimble = new WeArtThimbleTrackingObject(_weartClient, HandSide.Right, ActuationPoint.Thumb);
+            _rightMiddleThimble = new WeArtThimbleTrackingObject(_weartClient, HandSide.Right, ActuationPoint.Middle);
+        }
+
+        private void RenderTrackingData()
+        {
+            ValueIndexRightClosure.Text = _rightIndexThimble.Closure.Value.ToString();
+            ValueThumbRightClosure.Text = _rightThumbThimble.Closure.Value.ToString();
+            ValueThumbRightAbduction.Text = _rightThumbThimble.Abduction.Value.ToString();
+            ValueMiddleRightClosure.Text = _rightMiddleThimble.Closure.Value.ToString();
+
+            ValueIndexLeftClosure.Text = _leftIndexThimble.Closure.Value.ToString();
+            ValueThumbLeftClosure.Text = _leftThumbThimble.Closure.Value.ToString();
+            ValueThumbLeftAbduction.Text = _leftThumbThimble.Abduction.Value.ToString();
+            ValueMiddleLeftClosure.Text = _leftMiddleThimble.Closure.Value.ToString();
+        }
+
+        #endregion
+
+        #region Raw Data Tracking
+
+        HandSide selectedHandSide = HandSide.Right;
+        ActuationPoint selectedActuationPoint = ActuationPoint.Index;
+
+        private Dictionary<(HandSide, ActuationPoint), WeArtRawSensorsDataTrackingObject> rawDataTrackers = new Dictionary<(HandSide, ActuationPoint), WeArtRawSensorsDataTrackingObject>();
+
+        private void InitRawDataTrackers()
+        {
+            rawDataTrackers.Clear();
+            foreach (HandSide hs in Enum.GetValues(typeof(HandSide)))
+            {
+                foreach (ActuationPoint ap in Enum.GetValues(typeof(ActuationPoint)))
+                {
+                    rawDataTrackers.Add((hs, ap), new WeArtRawSensorsDataTrackingObject(_weartClient, hs, ap));
+                }
+            }
+            // Add default tracker callback
+            var key = (selectedHandSide, selectedActuationPoint);
+            if (rawDataTrackers.ContainsKey(key)) rawDataTrackers[key].DataReceived += RenderRawDataAsync;
+        }
+
+        private void HandSideChoice_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var oldKey = (selectedHandSide, selectedActuationPoint);
+            selectedHandSide = Enum.Parse<HandSide>((e.AddedItems[0] as ComboBoxItem).Content.ToString(), true);
+            var newKey = (selectedHandSide, selectedActuationPoint);
+            UpdateRawDataTrackerCallback(oldKey, newKey);
+        }
+
+        private void ActuationPointChoice_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var oldKey = (selectedHandSide, selectedActuationPoint);
+            selectedActuationPoint = Enum.Parse<ActuationPoint>((e.AddedItems[0] as ComboBoxItem).Content.ToString(), true);
+            var newKey = (selectedHandSide, selectedActuationPoint);
+            UpdateRawDataTrackerCallback(oldKey, newKey);
+        }
+
+        private void UpdateRawDataTrackerCallback((HandSide, ActuationPoint) oldKey, (HandSide, ActuationPoint) newKey)
+        {
+            if (oldKey == newKey)
+                return;
+
+            if (rawDataTrackers.ContainsKey(oldKey)) rawDataTrackers[oldKey].DataReceived -= RenderRawDataAsync;
+            if (rawDataTrackers.ContainsKey(newKey)) rawDataTrackers[newKey].DataReceived += RenderRawDataAsync;
+        }
+
+        private void RenderRawDataAsync(SensorData data)
+        {
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                Acc_X.Text = data.Accelerometer.X.ToString();
+                Acc_Y.Text = data.Accelerometer.Y.ToString();
+                Acc_Y.Text = data.Accelerometer.Z.ToString();
+
+                Gyro_X.Text = data.Gyroscope.X.ToString();
+                Gyro_Y.Text = data.Gyroscope.Y.ToString();
+                Gyro_Y.Text = data.Gyroscope.Z.ToString();
+
+                TimeOfFlight.Text = data.TimeOfFlight.Distance.ToString();
+
+                LastSampleTime.Text = data.Timestamp.ToString("yyyy/MM/dd HH:mm:ss.fff");
+            });
+        }
+        #endregion
 
         private void CreateEffect()
         {
@@ -236,6 +318,16 @@ namespace WEART_API_Integration
         private void StartCalibration_Click(object sender, RoutedEventArgs e)
         {
             _weartClient.StartCalibration();
+        }
+
+        private void ButtonStartRawData_Click(object sender, RoutedEventArgs e)
+        {
+            _weartClient.StartRawData();
+        }
+
+        private void ButtonStopRawData_Click(object sender, RoutedEventArgs e)
+        {
+            _weartClient.StopRawData();
         }
     }
 }

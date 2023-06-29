@@ -140,6 +140,7 @@
     <Compile Include="WEART_SDK\WeArtNetwork.cs" />
     <Compile Include="WEART_SDK\WeArtTemperature.cs" />
     <Compile Include="WEART_SDK\WeArtTexture.cs" />
+    <Compile Include="WEART_SDK\WeArtRawSensorsDataTrackingObject.cs" />
     <Compile Include="WEART_SDK\WeArtThimbleTrackingObject.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -170,6 +171,9 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.12</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>13.0.3</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup />
