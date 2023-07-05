@@ -8,8 +8,8 @@ using WeArt.Core;
 using System.Timers;
 using System.Collections.Generic;
 using WeArt.Messages;
-using static WeArt.Core.WeArtClient;
-using System.Diagnostics;
+using Windows.UI;
+using Windows.UI.Xaml.Media;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -50,13 +50,17 @@ namespace WEART_API_Integration
             InitRawDataTrackers();
 
             // handle calibration
+            _weartClient.OnConnectionStatusChanged += UpdateConnectionStatus;
             _weartClient.OnCalibrationStart += OnCalibrationStart;
             _weartClient.OnCalibrationResultSuccess += (HandSide hand) => OnCalibrationResult(hand, true);
             _weartClient.OnCalibrationResultFail += (HandSide hand) => OnCalibrationResult(hand, false);
-            _weartClient.OnMiddlewareStatusMessage+= (MiddlewareStatusMessage status) => UpdateUIBasedOnStatus(status.Status);
+            _weartClient.OnMiddlewareStatusMessage+= UpdateUIBasedOnStatus;
+            _weartClient.OnDevicesStatusMessage += UpdateDevicesStatus;
 
             // Init controls
-            UpdateUIBasedOnStatus(MiddlewareStatus.DISCONNECTED);
+            UpdateUIBasedOnStatus(new MiddlewareStatusMessage());
+            LeftHand.Refresh();
+            RightHand.Refresh();
 
             // schedule timer to check tracking closure value
             System.Timers.Timer timer = new System.Timers.Timer();
@@ -64,6 +68,15 @@ namespace WEART_API_Integration
             timer.AutoReset = true;
             timer.Elapsed += OnTimerElapsed;
             timer.Start();
+        }
+
+        private void UpdateConnectionStatus(bool connected)
+        {
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                ConnectionStatus.Text = connected ? "Connected" : "Not Connected";
+                ConnectionStatus.Foreground = new SolidColorBrush(connected ? Colors.Green : Colors.Red);
+            });
         }
 
         private void OnCalibrationStart(HandSide handSide)
@@ -99,17 +112,59 @@ namespace WEART_API_Integration
         }
 
 
-        private void UpdateUIBasedOnStatus(MiddlewareStatus status)
+        private Color MiddlewareStatusColor(MiddlewareStatus status)
         {
+            bool isYellow = status == MiddlewareStatus.STOPPING
+                || status == MiddlewareStatus.CALIBRATION
+                || status == MiddlewareStatus.UPLOADING_TEXTURES
+                || status == MiddlewareStatus.CONNECTING_DEVICE;
+            bool isRed = status == MiddlewareStatus.DISCONNECTED;
+
+            return isRed ? Colors.Red : (isYellow ? Colors.Orange : Colors.Green);
+        }
+
+        private void UpdateUIBasedOnStatus(MiddlewareStatusMessage message)
+        {
+            if (message is null)
+                return;
+
+            MiddlewareStatus status = message.Status;
             bool isRunning = status == MiddlewareStatus.RUNNING;
 
+            Color statusColor = MiddlewareStatusColor(status);
+            bool isStatusOk = message.StatusCode == 0;
+            
             Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
+                // Update buttons
                 StartClient.IsEnabled = status != MiddlewareStatus.RUNNING && status != MiddlewareStatus.STARTING;
                 StopClient.IsEnabled = isRunning;
                 StartCalibration.IsEnabled = status == MiddlewareStatus.RUNNING;
 
-                AddEffectSampl1.IsEnabled = isRunning;
+                AddEffectSample1.IsEnabled = isRunning;
+                AddEffectSample2.IsEnabled = isRunning;
+                AddEffectSample3.IsEnabled = isRunning;
+                RemoveEffects.IsEnabled = isRunning;
+                ButtonStartRawData.IsEnabled = isRunning;
+                ButtonStopRawData.IsEnabled = isRunning;
+
+
+                // Update middleware status panel
+                MiddlewareStatus_Text.Text = status.ToString();
+                MiddlewareStatus_Text.Foreground = new SolidColorBrush(statusColor);
+
+                if(message.Version != null)
+                    MiddlewareVersion_Text.Text = message.Version;
+
+                Brush statusCodeBrush = new SolidColorBrush(isStatusOk ? Colors.Green : Colors.Red);
+                MwStatusCode.Text = message.StatusCode.ToString();
+                MwStatusCode.Foreground = statusCodeBrush;
+                MwStatusCodeDesc.Text = isStatusOk ? "OK" : (message.ErrorDesc != null ? message.ErrorDesc : "");
+                MwStatusCodeDesc.Foreground = statusCodeBrush;
+
+                ConnectedDevicesNum_Text.Text = message.ConnectedDevices.Count.ToString();
+
+                AddEffectSample1.IsEnabled = isRunning;
                 AddEffectSample2.IsEnabled = isRunning;
                 AddEffectSample3.IsEnabled = isRunning;
                 RemoveEffects.IsEnabled = isRunning;
@@ -117,7 +172,27 @@ namespace WEART_API_Integration
                 ButtonStopRawData.IsEnabled = isRunning;
             });
         }
-        
+
+        private void UpdateDevicesStatus(DevicesStatusMessage status)
+        {
+            LeftHand.Connected = false;
+            RightHand.Connected = false;
+            foreach (DeviceStatus device in status.Devices)
+            {
+                if(device.HandSide == HandSide.Left)
+                {
+                    LeftHand.Device = device;
+                    LeftHand.Connected = true;
+                } else
+                {
+                    RightHand.Device = device;
+                    RightHand.Connected = true;
+                }
+            }
+            LeftHand.Refresh();
+            RightHand.Refresh();
+        }
+
 
         #region Closure/Abduction Tracking
 
@@ -245,7 +320,8 @@ namespace WEART_API_Integration
         {
             // stop and idle mode middleware
             _weartClient.Stop();
-            UpdateUIBasedOnStatus(MiddlewareStatus.DISCONNECTED);
+            // Reset status
+            UpdateUIBasedOnStatus(new MiddlewareStatusMessage());
         }
 
         private void AddEffectSample1_Click(object sender, RoutedEventArgs e)

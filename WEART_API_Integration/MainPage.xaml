@@ -8,71 +8,98 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid Background="LightGray">
-        <Button x:Name="StartClient" Margin="100,80,0,0" VerticalAlignment="Top" Click="StartClient_Click">
-            Start Client
-        </Button>
-        <Button x:Name="StopClient" Margin="230,80,0,0" VerticalAlignment="Top" Click="StopClient_Click">
-            Stop Client
-        </Button>
-        <Button x:Name="StartCalibration" Margin="360,80,0,0" VerticalAlignment="Top" Click="StartCalibration_Click">
-            Calibrate
-        </Button>
-        <TextBlock x:Name="CalibrationStatusText" Margin="450,87,0,0" VerticalAlignment="Top" />
-        <Button x:Name="AddEffectSampl1" Margin="100,150,0,0" VerticalAlignment="Top" Click="AddEffectSample1_Click">
-            Add Effect Sample 1
-        </Button>
-        <Button x:Name="AddEffectSample2" Margin="100,220,0,0" VerticalAlignment="Top" Click="AddEffectSample2_Click">
-            Add Effect Sample 2
-        </Button>
-        <Button x:Name="AddEffectSample3" Margin="100,290,0,0" VerticalAlignment="Top" Click="AddEffectSample3_Click">
-            Add Effect Sample 3
-        </Button>
-        <Button x:Name="RemoveEffects" Margin="100,360,0,0" VerticalAlignment="Top" Click="RemoveEffects_Click">
-            Remove Effects
-        </Button>
+    <Grid>
+        <TextBlock x:Name="ConnectionStatus" Margin="100,20,0,0" Width="150" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold" Text="Not Connected" Foreground="Red"/>
+        <Button x:Name="StartClient" Content="Start Client" Margin="100,60,0,0" VerticalAlignment="Top" Click="StartClient_Click" IsEnabled="True"/>
+        <Button x:Name="StopClient" Content="Stop Client" Margin="230,60,0,0" VerticalAlignment="Top" Click="StopClient_Click" IsEnabled="True"/>
+        <Button x:Name="StartCalibration" Content="Calibrate" Margin="360,60,0,0" VerticalAlignment="Top" Click="StartCalibration_Click" IsEnabled="False"/>
+        <TextBlock Text="" x:Name="CalibrationStatusText" Margin="450,67,0,0" FontSize="16" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Left" Width="300"/>
 
-        <StackPanel Orientation="Vertical" Margin="300,150,0,0">
-            <StackPanel Orientation="Horizontal" Height="40" Margin="0,0,0,0">
-                <TextBlock Text="Right Index Closure:" x:Name="LabelIndexRightClosure" FontSize="16" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                <TextBlock Text="0.0" x:Name="ValueIndexRightClosure" FontSize="16" FontWeight="Bold" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" Height="40" Margin="0,0,0,0">
-                <TextBlock Text="Right Thumb Closure:" x:Name="LabelThumbRightClosure" FontSize="16" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                <TextBlock Text="0.0" x:Name="ValueThumbRightClosure" FontSize="16" FontWeight="Bold" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <StackPanel x:Name="MwStatusPanel" Orientation="Vertical" Margin="100,110,0,0" HorizontalAlignment="Left"
+                    Width="350" Height="380" VerticalAlignment="Top" Spacing="10"
+                    BorderThickness="1" BorderBrush="#CCCCCC" Padding="20">
+
+            <TextBlock FontSize="16" FontWeight="Bold">
+                <Run>Middleware (version</Run>
+                <Run x:Name="MiddlewareVersion_Text" Text=""/>
+                <Run>)</Run>
+            </TextBlock>
+
+            <TextBlock FontSize="16" FontWeight="Bold">
+                <Run>Status: </Run>
+                <Run x:Name="MiddlewareStatus_Text" Text="NONE" Foreground="Red"/>
+            </TextBlock>
+
+            <TextBlock FontSize="16" FontWeight="Bold" VerticalAlignment="Center">
+                <Run x:Name="ConnectedDevicesNum_Text" Text="0"/>
+                <Run>devices connected.</Run>
+            </TextBlock>
+
+            <StackPanel Spacing="10" x:Name="MwStatusErrorBlock">
+                <TextBlock FontSize="16" FontWeight="Bold" VerticalAlignment="Center">
+                <Run>Status code: </Run>
+                <Run x:Name="MwStatusCode" Text="0"/>
+                </TextBlock>
+
+                <TextBlock FontSize="16" VerticalAlignment="Center" TextWrapping="Wrap" Height="60">
+                    <Run FontWeight="Bold">Description: </Run>
+                    <Run x:Name="MwStatusCodeDesc" Text="OK"/>
+                </TextBlock>
             </StackPanel>
 
-            <StackPanel Orientation="Horizontal" Height="40" Margin="0,0,0,0">
-                <TextBlock Text="Right Thumb Abduction:" x:Name="LabelThumbRightAbduction" FontSize="16" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                <TextBlock Text="0.0" x:Name="ValueThumbRightAbduction" FontSize="16" FontWeight="Bold" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" Height="40" Margin="0,0,0,0">
-                <TextBlock Text="Right Middle Closure:" x:Name="LabelMiddleRightClosure" FontSize="16" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                <TextBlock Text="0.0" x:Name="ValueMiddleRightClosure" FontSize="16" FontWeight="Bold" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-            </StackPanel>
-            
-            <StackPanel Orientation="Horizontal" Height="40" Margin="0,0,0,0">
-                <TextBlock Text="Left Index Closure:" x:Name="LabelIndexLeftClosure" FontSize="16" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                <TextBlock Text="0.0" x:Name="ValueIndexLeftClosure" FontSize="16" FontWeight="Bold" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" Height="40" Margin="0,0,0,0">
-                <TextBlock Text="Left Thumb Closure:" x:Name="LabelThumbLeftClosure" FontSize="16" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                <TextBlock Text="0.0" x:Name="ValueThumbLeftClosure" FontSize="16" FontWeight="Bold" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" Height="40" Margin="0,0,0,0">
-                <TextBlock Text="Left Thumb Abduction:" x:Name="LabelThumbLeftAbduction" FontSize="16" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                <TextBlock Text="0.0" x:Name="ValueThumbLeftAbduction" FontSize="16" FontWeight="Bold" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" Height="40" Margin="0,0,0,0">
-                <TextBlock Text="Left Middle Closure:" x:Name="LabelMiddleLeftClosure" FontSize="16" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                <TextBlock Text="0.0" x:Name="ValueMiddleLeftClosure" FontSize="16" FontWeight="Bold" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-            </StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <local:HandStatus  Grid.Column="0" x:Name="LeftHand" Connected="false" HandSide="Left"/>
+                <local:HandStatus  Grid.Column="1" x:Name="RightHand" Connected="false" HandSide="Right"/>
+            </Grid>
+
         </StackPanel>
 
-        <StackPanel Margin="650,150,0,0" HorizontalAlignment="Left" Width="400" VerticalAlignment="Top">
+        <StackPanel Orientation="Horizontal" Margin="470,430,0,0" Width="790" Height="60"  VerticalAlignment="Top" HorizontalAlignment="Left" Spacing="70" BorderThickness="1" BorderBrush="#CCCCCC" Padding="15,0,0,0">
+            <Button x:Name="AddEffectSample1" Content="Add effect sample 1" HorizontalAlignment="Center" Click="AddEffectSample1_Click" IsEnabled="False"/>
+            <Button x:Name="AddEffectSample2" Content="Add effect sample 2" HorizontalAlignment="Center" Click="AddEffectSample2_Click" IsEnabled="False"/>
+            <Button x:Name="AddEffectSample3" Content="Add effect sample 3" HorizontalAlignment="Center"  Click="AddEffectSample3_Click" IsEnabled="False"/>
+            <Button x:Name="RemoveEffects" Content="Remove Effect" HorizontalAlignment="Center" Click="RemoveEffects_Click" IsEnabled="False"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Vertical" Margin="470,110,0,0" HorizontalAlignment="Left" 
+                    Width="350" Height="310" VerticalAlignment="Top" Spacing="15"
+                    BorderThickness="1" BorderBrush="#CCCCCC" Padding="10">
+            <TextBlock FontSize="16" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <Run>Right Index Closure:</Run> <Run x:Name="ValueIndexRightClosure" Text="0.0"/>
+            </TextBlock>
+            <TextBlock FontSize="16" FontWeight="Bold" HorizontalAlignment="Left">
+                <Run>Right Thumb Closure:</Run> <Run x:Name="ValueThumbRightClosure" Text="0.0"/>
+            </TextBlock>
+            <TextBlock FontSize="16" FontWeight="Bold" HorizontalAlignment="Left">
+                <Run>Right Thumb Abduction:</Run> <Run x:Name="ValueThumbRightAbduction" Text="0.0"/>
+            </TextBlock>
+            <TextBlock FontSize="16" FontWeight="Bold" HorizontalAlignment="Left">
+                <Run>Right Middle Closure:</Run> <Run x:Name="ValueMiddleRightClosure" Text="0.0"/>
+            </TextBlock>
+
+            <TextBlock FontSize="16" FontWeight="Bold" HorizontalAlignment="Left">
+                <Run>Left Index Closure:</Run> <Run x:Name="ValueIndexLeftClosure" Text="0.0"/>
+            </TextBlock>
+            <TextBlock FontSize="16" FontWeight="Bold" HorizontalAlignment="Left">
+                <Run>Left Thumb Closure:</Run> <Run x:Name="ValueThumbLeftClosure" Text="0.0"/>
+            </TextBlock>
+            <TextBlock FontSize="16" FontWeight="Bold" HorizontalAlignment="Left">
+                <Run>Left Thumb Abduction:</Run> <Run x:Name="ValueThumbLeftAbduction" Text="0.0"/>
+            </TextBlock>
+            <TextBlock FontSize="16" FontWeight="Bold" HorizontalAlignment="Left">
+                <Run>Left Middle Closure:</Run> <Run x:Name="ValueMiddleLeftClosure" Text="0.0"/>
+            </TextBlock>
+        </StackPanel>
+
+        <StackPanel Margin="840,110,0,0" HorizontalAlignment="Left" Width="420" Height="310" VerticalAlignment="Top" BorderThickness="1" BorderBrush="#CCCCCC" Padding="10">
             <StackPanel Orientation="Horizontal" Margin="0,10,0,10" Spacing="10">
-                <Button x:Name="ButtonStartRawData" Content="Start Raw Data" VerticalAlignment="Top" Click="ButtonStartRawData_Click"/>
-                <Button x:Name="ButtonStopRawData" Content="Stop Raw Data" VerticalAlignment="Top" Click="ButtonStopRawData_Click"/>
+                <Button x:Name="ButtonStartRawData" Content="Start Raw Data" VerticalAlignment="Top" Click="ButtonStartRawData_Click" IsEnabled="False"/>
+                <Button x:Name="ButtonStopRawData" Content="Stop Raw Data" VerticalAlignment="Top" Click="ButtonStopRawData_Click" IsEnabled="False"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal">
@@ -124,6 +151,5 @@
                 <TextBlock Text="0" x:Name="TimeOfFlight" FontSize="16" FontWeight="Bold" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
             </StackPanel>
         </StackPanel>
-
     </Grid>
 </Page>
