@@ -54,11 +54,11 @@ namespace WEART_API_Integration
             _weartClient.OnCalibrationStart += OnCalibrationStart;
             _weartClient.OnCalibrationResultSuccess += (HandSide hand) => OnCalibrationResult(hand, true);
             _weartClient.OnCalibrationResultFail += (HandSide hand) => OnCalibrationResult(hand, false);
-            _weartClient.OnMiddlewareStatusMessage+= UpdateUIBasedOnStatus;
-            _weartClient.OnDevicesStatusMessage += UpdateDevicesStatus;
+            _weartClient.OnMiddlewareStatusUpdate+= UpdateUIBasedOnStatus;
+            _weartClient.OnMiddlewareStatusUpdate += UpdateDevicesStatus;
 
             // Init controls
-            UpdateUIBasedOnStatus(new MiddlewareStatusMessage());
+            UpdateUIBasedOnStatus(new MiddlewareStatusUpdate());
             LeftHand.Refresh();
             RightHand.Refresh();
 
@@ -123,18 +123,18 @@ namespace WEART_API_Integration
             return isRed ? Colors.Red : (isYellow ? Colors.Orange : Colors.Green);
         }
 
-        private void UpdateUIBasedOnStatus(MiddlewareStatusMessage message)
+        private void UpdateUIBasedOnStatus(MiddlewareStatusUpdate statusUpdate)
         {
-            if (message is null)
+            if (statusUpdate is null)
                 return;
 
-            MiddlewareStatus status = message.Status;
+            MiddlewareStatus status = statusUpdate.Status;
             bool isRunning = status == MiddlewareStatus.RUNNING;
 
             Color statusColor = MiddlewareStatusColor(status);
-            bool isStatusOk = message.StatusCode == 0;
-            
-            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            bool isStatusOk = statusUpdate.StatusCode == 0;
+
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, (Windows.UI.Core.DispatchedHandler)(() =>
             {
                 // Update buttons
                 StartClient.IsEnabled = status != MiddlewareStatus.RUNNING && status != MiddlewareStatus.STARTING;
@@ -153,16 +153,16 @@ namespace WEART_API_Integration
                 MiddlewareStatus_Text.Text = status.ToString();
                 MiddlewareStatus_Text.Foreground = new SolidColorBrush(statusColor);
 
-                if(message.Version != null)
-                    MiddlewareVersion_Text.Text = message.Version;
+                if(statusUpdate.Version != null)
+                    MiddlewareVersion_Text.Text = statusUpdate.Version;
 
                 Brush statusCodeBrush = new SolidColorBrush(isStatusOk ? Colors.Green : Colors.Red);
-                MwStatusCode.Text = message.StatusCode.ToString();
+                MwStatusCode.Text = statusUpdate.StatusCode.ToString();
                 MwStatusCode.Foreground = statusCodeBrush;
-                MwStatusCodeDesc.Text = isStatusOk ? "OK" : (message.ErrorDesc != null ? message.ErrorDesc : "");
+                MwStatusCodeDesc.Text = isStatusOk ? "OK" : (statusUpdate.ErrorDesc != null ? statusUpdate.ErrorDesc : "");
                 MwStatusCodeDesc.Foreground = statusCodeBrush;
 
-                ConnectedDevicesNum_Text.Text = message.ConnectedDevices.Count.ToString();
+                ConnectedDevicesNum_Text.Text = statusUpdate.Devices.Count.ToString();
 
                 AddEffectSample1.IsEnabled = isRunning;
                 AddEffectSample2.IsEnabled = isRunning;
@@ -170,14 +170,14 @@ namespace WEART_API_Integration
                 RemoveEffects.IsEnabled = isRunning;
                 ButtonStartRawData.IsEnabled = isRunning;
                 ButtonStopRawData.IsEnabled = isRunning;
-            });
+            }));
         }
 
-        private void UpdateDevicesStatus(DevicesStatusMessage status)
+        private void UpdateDevicesStatus(MiddlewareStatusUpdate statusUpdate)
         {
             LeftHand.Connected = false;
             RightHand.Connected = false;
-            foreach (DeviceStatus device in status.Devices)
+            foreach (DeviceStatus device in statusUpdate.Devices)
             {
                 if(device.HandSide == HandSide.Left)
                 {
@@ -321,7 +321,7 @@ namespace WEART_API_Integration
             // stop and idle mode middleware
             _weartClient.Stop();
             // Reset status
-            UpdateUIBasedOnStatus(new MiddlewareStatusMessage());
+            UpdateUIBasedOnStatus(new MiddlewareStatusUpdate());
         }
 
         private void AddEffectSample1_Click(object sender, RoutedEventArgs e)
