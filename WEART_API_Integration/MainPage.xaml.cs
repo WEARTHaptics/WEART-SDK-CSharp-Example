@@ -3,11 +3,11 @@
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-using WeArt.Components;
 using WeArt.Core;
+using WeArt.Components;
+using WeArt.Messages;
 using System.Timers;
 using System.Collections.Generic;
-using WeArt.Messages;
 using Windows.UI;
 using Windows.UI.Xaml.Media;
 
@@ -54,6 +54,7 @@ namespace WEART_API_Integration
             _weartClient.OnCalibrationStart += OnCalibrationStart;
             _weartClient.OnCalibrationResultSuccess += (HandSide hand) => OnCalibrationResult(hand, true);
             _weartClient.OnCalibrationResultFail += (HandSide hand) => OnCalibrationResult(hand, false);
+            _weartClient.OnCalibrationFinish += (HandSide hand) => Console.WriteLine("Finish");
             _weartClient.OnMiddlewareStatusUpdate+= UpdateUIBasedOnStatus;
             _weartClient.OnMiddlewareStatusUpdate += UpdateDevicesStatus;
 
