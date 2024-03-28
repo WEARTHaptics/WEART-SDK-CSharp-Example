@@ -48,6 +48,7 @@ namespace WEART_API_Integration
 
             InitTrackers();
             InitRawDataTrackers();
+            InitAnalogSensorRawDataTrackers();
 
             // handle calibration
             _weartClient.OnConnectionStatusChanged += UpdateConnectionStatus;
@@ -253,6 +254,24 @@ namespace WEART_API_Integration
             if (rawDataTrackers.ContainsKey(key)) rawDataTrackers[key].DataReceived += RenderRawDataAsync;
         }
 
+
+        private Dictionary<(HandSide, ActuationPoint), WeArtAnalogSensorRawDataObject> analogSensorRawData = new Dictionary<(HandSide, ActuationPoint), WeArtAnalogSensorRawDataObject>();
+
+        private void InitAnalogSensorRawDataTrackers()
+        {
+            analogSensorRawData.Clear();
+            foreach (HandSide hs in Enum.GetValues(typeof(HandSide)))
+            {
+                foreach (ActuationPoint ap in Enum.GetValues(typeof(ActuationPoint)))
+                {
+                    analogSensorRawData.Add((hs, ap), new WeArtAnalogSensorRawDataObject(_weartClient, hs, ap));
+                }
+            }
+            // Add default tracker callback
+            var key = (selectedHandSide, selectedActuationPoint);
+            if (analogSensorRawData.ContainsKey(key)) analogSensorRawData[key].DataReceived += RenderAanlogSensorRawDataAsync;
+        }
+
         private void HandSideChoice_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var oldKey = (selectedHandSide, selectedActuationPoint);
@@ -276,6 +295,9 @@ namespace WEART_API_Integration
 
             if (rawDataTrackers.ContainsKey(oldKey)) rawDataTrackers[oldKey].DataReceived -= RenderRawDataAsync;
             if (rawDataTrackers.ContainsKey(newKey)) rawDataTrackers[newKey].DataReceived += RenderRawDataAsync;
+
+            if (analogSensorRawData.ContainsKey(oldKey)) analogSensorRawData[oldKey].DataReceived -= RenderAanlogSensorRawDataAsync;
+            if (analogSensorRawData.ContainsKey(newKey)) analogSensorRawData[newKey].DataReceived += RenderAanlogSensorRawDataAsync;
         }
 
         private void RenderRawDataAsync(SensorData data)
@@ -295,6 +317,20 @@ namespace WEART_API_Integration
                 LastSampleTime.Text = data.Timestamp.ToString("yyyy/MM/dd HH:mm:ss.fff");
             });
         }
+
+        private void RenderAanlogSensorRawDataAsync(AnalogSensorRawData data)
+        {
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+            {
+                ntcTempRawValue.Text = data.NtcTemperatureRaw.ToString();
+                ntcTempRawConvertedValue.Text = data.NtcTemperatureConverted.ToString();
+                forceSensingRawValue.Text = data.ForceSensingRaw.ToString();
+                forceSensingConvertedValue.Text = data.ForceSensingConverted.ToString();
+
+                LastSampleTime.Text = data.Timestamp.ToString("yyyy/MM/dd HH:mm:ss.fff");
+            });
+        }
+
         #endregion
 
         private void CreateEffect()

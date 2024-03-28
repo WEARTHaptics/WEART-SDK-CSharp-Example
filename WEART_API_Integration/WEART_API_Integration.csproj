@@ -122,28 +122,29 @@
     <Compile Include="HandStatus.xaml.cs">
       <DependentUpon>HandStatus.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WEART_SDK\IWeArtEffect.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WEART_SDK\TouchEffect.cs" />
-    <Compile Include="WEART_SDK\WeArtClient.cs" />
-    <Compile Include="WEART_SDK\WeArtAbduction.cs" />
-    <Compile Include="WEART_SDK\WeArtClosure.cs" />
-    <Compile Include="WEART_SDK\WeArtCommon.cs" />
-    <Compile Include="WEART_SDK\WeArtComparers.cs" />
-    <Compile Include="WEART_SDK\WeArtController.cs" />
-    <Compile Include="WEART_SDK\WeArtForce.cs" />
-    <Compile Include="WEART_SDK\WeArtHapticObject.cs" />
-    <Compile Include="WEART_SDK\WeArtLog.cs" />
-    <Compile Include="WEART_SDK\WeArtMessageCustomSerializer.cs" />
-    <Compile Include="WEART_SDK\WeArtMessages.cs" />
-    <Compile Include="WEART_SDK\WeArtMessageSerializer.cs" />
-    <Compile Include="WEART_SDK\WeArtTemperature.cs" />
-    <Compile Include="WEART_SDK\WeArtTexture.cs" />
-    <Compile Include="WEART_SDK\WeArtRawSensorsDataTrackingObject.cs" />
-    <Compile Include="WEART_SDK\WeArtThimbleTrackingObject.cs" />
+    <Compile Include="WEART_SDK_C_SHARP\IWeArtEffect.cs" />
+    <Compile Include="WEART_SDK_C_SHARP\TouchEffect.cs" />
+    <Compile Include="WEART_SDK_C_SHARP\WeArtAbduction.cs" />
+    <Compile Include="WEART_SDK_C_SHARP\WeArtAnalogSensorRawDataObject.cs" />
+    <Compile Include="WEART_SDK_C_SHARP\WeArtClient.cs" />
+    <Compile Include="WEART_SDK_C_SHARP\WeArtClosure.cs" />
+    <Compile Include="WEART_SDK_C_SHARP\WeArtCommon.cs" />
+    <Compile Include="WEART_SDK_C_SHARP\WeArtComparers.cs" />
+    <Compile Include="WEART_SDK_C_SHARP\WeArtController.cs" />
+    <Compile Include="WEART_SDK_C_SHARP\WeArtForce.cs" />
+    <Compile Include="WEART_SDK_C_SHARP\WeArtHapticObject.cs" />
+    <Compile Include="WEART_SDK_C_SHARP\WeArtLog.cs" />
+    <Compile Include="WEART_SDK_C_SHARP\WeArtMessageCustomSerializer.cs" />
+    <Compile Include="WEART_SDK_C_SHARP\WeArtMessages.cs" />
+    <Compile Include="WEART_SDK_C_SHARP\WeArtMessageSerializer.cs" />
+    <Compile Include="WEART_SDK_C_SHARP\WeArtRawSensorsDataTrackingObject.cs" />
+    <Compile Include="WEART_SDK_C_SHARP\WeArtTemperature.cs" />
+    <Compile Include="WEART_SDK_C_SHARP\WeArtTexture.cs" />
+    <Compile Include="WEART_SDK_C_SHARP\WeArtThimbleTrackingObject.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -162,6 +163,27 @@
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+    <Content Include="WEART_SDK_C_SHARP\.gitignore" />
+    <Content Include="WEART_SDK_C_SHARP\docs\doxygen-awesome\doxygen-awesome-darkmode-toggle.js" />
+    <Content Include="WEART_SDK_C_SHARP\docs\doxygen-awesome\doxygen-awesome-fragment-copy-button.js" />
+    <Content Include="WEART_SDK_C_SHARP\docs\doxygen-awesome\doxygen-awesome-interactive-toc.js" />
+    <Content Include="WEART_SDK_C_SHARP\docs\doxygen-awesome\doxygen-awesome-paragraph-link.js" />
+    <Content Include="WEART_SDK_C_SHARP\docs\doxygen-awesome\doxygen-awesome-sidebar-only-darkmode-toggle.css" />
+    <Content Include="WEART_SDK_C_SHARP\docs\doxygen-awesome\doxygen-awesome-sidebar-only.css" />
+    <Content Include="WEART_SDK_C_SHARP\docs\doxygen-awesome\doxygen-awesome-tabs.js" />
+    <Content Include="WEART_SDK_C_SHARP\docs\doxygen-awesome\doxygen-awesome.css" />
+    <Content Include="WEART_SDK_C_SHARP\docs\doxygen-awesome\doxygen-custom\custom-alternative.css" />
+    <Content Include="WEART_SDK_C_SHARP\docs\doxygen-awesome\doxygen-custom\custom.css" />
+    <Content Include="WEART_SDK_C_SHARP\docs\doxygen-awesome\doxygen-custom\header.html" />
+    <Content Include="WEART_SDK_C_SHARP\docs\doxygen-awesome\doxygen-custom\toggle-alternative-theme.js" />
+    <Content Include="WEART_SDK_C_SHARP\docs\doxygen-awesome\img-zoom-modal.js" />
+    <Content Include="WEART_SDK_C_SHARP\docs\img\architecture.svg" />
+    <Content Include="WEART_SDK_C_SHARP\docs\img\example_app\ExampleApp_MiddlewareStatus.png" />
+    <Content Include="WEART_SDK_C_SHARP\docs\img\example_app\ExampleApp_RawData.png" />
+    <Content Include="WEART_SDK_C_SHARP\docs\img\example_app\ExampleApp_Screen.png" />
+    <Content Include="WEART_SDK_C_SHARP\docs\img\logo\weart_dark.png" />
+    <Content Include="WEART_SDK_C_SHARP\docs\img\logo\weart_light.png" />
+    <Content Include="WEART_SDK_C_SHARP\docs\weart.png" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -185,7 +207,13 @@
       <Version>13.0.3</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="WEART_SDK_C_SHARP\docs\example.md" />
+    <None Include="WEART_SDK_C_SHARP\docs\home.md" />
+    <None Include="WEART_SDK_C_SHARP\docs\upgrade.md" />
+    <None Include="WEART_SDK_C_SHARP\Doxyfile" />
+    <None Include="WEART_SDK_C_SHARP\README.md" />
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
