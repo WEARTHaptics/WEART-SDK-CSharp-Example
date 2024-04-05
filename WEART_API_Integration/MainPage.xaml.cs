@@ -48,7 +48,7 @@ namespace WEART_API_Integration
 
             InitTrackers();
             InitRawDataTrackers();
-            InitAnalogSensorRawDataTrackers();
+            InitSensorAnalogRawData();
 
             // handle calibration
             _weartClient.OnConnectionStatusChanged += UpdateConnectionStatus;
@@ -237,7 +237,7 @@ namespace WEART_API_Integration
         HandSide selectedHandSide = HandSide.Right;
         ActuationPoint selectedActuationPoint = ActuationPoint.Index;
 
-        private Dictionary<(HandSide, ActuationPoint), WeArtRawSensorsDataTrackingObject> rawDataTrackers = new Dictionary<(HandSide, ActuationPoint), WeArtRawSensorsDataTrackingObject>();
+        private Dictionary<(HandSide, ActuationPoint), WeArtTrackingRawDataObject> rawDataTrackers = new Dictionary<(HandSide, ActuationPoint), WeArtTrackingRawDataObject>();
 
         private void InitRawDataTrackers()
         {
@@ -246,7 +246,7 @@ namespace WEART_API_Integration
             {
                 foreach (ActuationPoint ap in Enum.GetValues(typeof(ActuationPoint)))
                 {
-                    rawDataTrackers.Add((hs, ap), new WeArtRawSensorsDataTrackingObject(_weartClient, hs, ap));
+                    rawDataTrackers.Add((hs, ap), new WeArtTrackingRawDataObject(_weartClient, hs, ap));
                 }
             }
             // Add default tracker callback
@@ -257,7 +257,7 @@ namespace WEART_API_Integration
 
         private Dictionary<(HandSide, ActuationPoint), WeArtAnalogSensorRawDataObject> analogSensorRawData = new Dictionary<(HandSide, ActuationPoint), WeArtAnalogSensorRawDataObject>();
 
-        private void InitAnalogSensorRawDataTrackers()
+        private void InitSensorAnalogRawData()
         {
             analogSensorRawData.Clear();
             foreach (HandSide hs in Enum.GetValues(typeof(HandSide)))
@@ -300,7 +300,7 @@ namespace WEART_API_Integration
             if (analogSensorRawData.ContainsKey(newKey)) analogSensorRawData[newKey].DataReceived += RenderAanlogSensorRawDataAsync;
         }
 
-        private void RenderRawDataAsync(SensorData data)
+        private void RenderRawDataAsync(TrackingRawData data)
         {
             Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {

@@ -141,7 +141,7 @@
     <Compile Include="WEART_SDK_C_SHARP\WeArtMessageCustomSerializer.cs" />
     <Compile Include="WEART_SDK_C_SHARP\WeArtMessages.cs" />
     <Compile Include="WEART_SDK_C_SHARP\WeArtMessageSerializer.cs" />
-    <Compile Include="WEART_SDK_C_SHARP\WeArtRawSensorsDataTrackingObject.cs" />
+    <Compile Include="WEART_SDK_C_SHARP\WeArtTrackingRawDataObject.cs" />
     <Compile Include="WEART_SDK_C_SHARP\WeArtTemperature.cs" />
     <Compile Include="WEART_SDK_C_SHARP\WeArtTexture.cs" />
     <Compile Include="WEART_SDK_C_SHARP\WeArtThimbleTrackingObject.cs" />
