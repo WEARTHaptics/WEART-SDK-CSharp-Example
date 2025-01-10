@@ -16,14 +16,17 @@
                 <Ellipse x:Name="ThumbThimble" Width="11" Height="11" Fill="Black" Opacity="0.4" Canvas.Left="76" Canvas.Top="48"/>
                 <Ellipse x:Name="IndexThimble" Width="12" Height="12" Fill="Black" Opacity="0.4" Canvas.Left="54.5" Canvas.Top="12"/>
                 <Ellipse x:Name="MiddleThimble" Width="12" Height="12" Fill="Black" Opacity="0.4" Canvas.Left="41" Canvas.Top="3"/>
+                <Ellipse x:Name="AnnularThimbel" Width="11" Height="11" Fill="Black" Opacity="0.4" Canvas.Left="28" Canvas.Top="11"/>
+                <Ellipse x:Name="PinkyThimble" Width="11" Height="11" Fill="Black" Opacity="0.4" Canvas.Left="15" Canvas.Top="25"/>
+                <Ellipse x:Name="PalmNode" Width="11" Height="11" Fill="Black" Opacity="0.4" Canvas.Left="37" Canvas.Top="67"/>
             </Canvas>
-            <TextBlock x:Name="MacAddressText" Text="AA:BB:CC:DD:EE:00" FontSize="12" Width="100" TextAlignment="Center"></TextBlock>
+            <TextBlock x:Name="MacAddressText" Text="AA:BB:CC:DD:EE:00" FontSize="12" Width="100" TextAlignment="Center" Foreground="#FF020000"></TextBlock>
             <StackPanel x:Name="BatteryPanel" Orientation="Horizontal" Spacing="5" HorizontalAlignment="Center" Height="15">
                 <Grid>
                     <Image x:Name="BatteryIconNotCharging" Source="Assets/battery.png" Height="12" VerticalAlignment="Center"/>
                     <Image x:Name="BatteryIconCharging" Visibility="Collapsed" Source="Assets/battery_charging.png" Height="12" VerticalAlignment="Center"/>
                 </Grid>
-                <TextBlock FontSize="12" VerticalAlignment="Center">
+                <TextBlock FontSize="12" VerticalAlignment="Center" Foreground="Black" >
                     <Run x:Name="BatteryLevelText" Text="80"/>
                     <Run>%</Run>
                 </TextBlock>

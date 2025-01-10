@@ -10,6 +10,8 @@ using System.Timers;
 using System.Collections.Generic;
 using Windows.UI;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Controls.Primitives;
+using System.Reflection;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -23,6 +25,7 @@ namespace WEART_API_Integration
         private WeArtClient _weartClient;
         private TouchEffect _effect;
         private WeArtHapticObject _hapticObject;
+
 
         public MainPage()
         {
@@ -44,7 +47,7 @@ namespace WEART_API_Integration
             // instantiate Haptic Object Right hand for Index Thimble
             _hapticObject = new WeArtHapticObject(_weartClient);
             _hapticObject.HandSides = HandSideFlags.Right; // HandSideFlags.Left;
-            _hapticObject.ActuationPoints = ActuationPointFlags.Index;  //ActuationPointFlags.Middle| ActuationPointFlags.Thumb
+            _hapticObject.ActuationPoints = ActuationPointFlags.Index | ActuationPointFlags.Middle | ActuationPointFlags.Thumb | ActuationPointFlags.Annular | ActuationPointFlags.Pinky | ActuationPointFlags.Palm;
 
             InitTrackers();
             InitRawDataTrackers();
@@ -164,7 +167,7 @@ namespace WEART_API_Integration
                 MwStatusCodeDesc.Text = isStatusOk ? "OK" : (statusUpdate.ErrorDesc != null ? statusUpdate.ErrorDesc : "");
                 MwStatusCodeDesc.Foreground = statusCodeBrush;
 
-                ConnectedDevicesNum_Text.Text = statusUpdate.Devices.Count.ToString();
+                ConnectedDevicesNum_Text.Text = statusUpdate.DevicesTD.Count.ToString();
 
                 AddEffectSample1.IsEnabled = isRunning;
                 AddEffectSample2.IsEnabled = isRunning;
@@ -179,7 +182,9 @@ namespace WEART_API_Integration
         {
             LeftHand.Connected = false;
             RightHand.Connected = false;
-            foreach (DeviceStatus device in statusUpdate.Devices)
+
+            //Manage TouchDIVER devices
+            foreach (DeviceStatusData device in statusUpdate.DevicesTD)
             {
                 if(device.HandSide == HandSide.Left)
                 {
@@ -191,6 +196,22 @@ namespace WEART_API_Integration
                     RightHand.Connected = true;
                 }
             }
+
+            //Manage TouchDIVERPro devices
+            foreach (TouchDiverProStatusData device in statusUpdate.DevicesTDPro)
+            {
+                if (device.HandSide == HandSide.Left)
+                {
+                    LeftHand.TouchDiverPro = device;
+                    LeftHand.Connected = true;
+                }
+                else
+                {
+                    RightHand.TouchDiverPro = device;
+                    RightHand.Connected = true;
+                }
+            }
+
             LeftHand.Refresh();
             RightHand.Refresh();
         }
@@ -201,10 +222,14 @@ namespace WEART_API_Integration
         private WeArtThimbleTrackingObject _leftIndexThimble;
         private WeArtThimbleTrackingObject _leftThumbThimble;
         private WeArtThimbleTrackingObject _leftMiddleThimble;
+        private WeArtThimbleTrackingObject _leftAnnularThimble;
+        private WeArtThimbleTrackingObject _leftPinkyThimble;
 
         private WeArtThimbleTrackingObject _rightIndexThimble;
         private WeArtThimbleTrackingObject _rightThumbThimble;
         private WeArtThimbleTrackingObject _rightMiddleThimble;
+        private WeArtThimbleTrackingObject _rightAnnularThimble;
+        private WeArtThimbleTrackingObject _rightPinkyThimble;
 
         private void InitTrackers()
         {
@@ -212,9 +237,14 @@ namespace WEART_API_Integration
             _leftIndexThimble = new WeArtThimbleTrackingObject(_weartClient, HandSide.Left, ActuationPoint.Index);
             _leftThumbThimble = new WeArtThimbleTrackingObject(_weartClient, HandSide.Left, ActuationPoint.Thumb);
             _leftMiddleThimble = new WeArtThimbleTrackingObject(_weartClient, HandSide.Left, ActuationPoint.Middle);
+            _leftAnnularThimble = new WeArtThimbleTrackingObject(_weartClient, HandSide.Left, ActuationPoint.Annular);
+            _leftPinkyThimble = new WeArtThimbleTrackingObject(_weartClient, HandSide.Left, ActuationPoint.Pinky);
+
             _rightIndexThimble = new WeArtThimbleTrackingObject(_weartClient, HandSide.Right, ActuationPoint.Index);
             _rightThumbThimble = new WeArtThimbleTrackingObject(_weartClient, HandSide.Right, ActuationPoint.Thumb);
             _rightMiddleThimble = new WeArtThimbleTrackingObject(_weartClient, HandSide.Right, ActuationPoint.Middle);
+            _rightAnnularThimble = new WeArtThimbleTrackingObject(_weartClient, HandSide.Right, ActuationPoint.Annular);
+            _rightPinkyThimble = new WeArtThimbleTrackingObject(_weartClient, HandSide.Right, ActuationPoint.Pinky);
         }
 
         private void RenderTrackingData()
@@ -223,11 +253,15 @@ namespace WEART_API_Integration
             ValueThumbRightClosure.Text = _rightThumbThimble.Closure.Value.ToString();
             ValueThumbRightAbduction.Text = _rightThumbThimble.Abduction.Value.ToString();
             ValueMiddleRightClosure.Text = _rightMiddleThimble.Closure.Value.ToString();
+            ValueAnnularRightClosure.Text = _rightAnnularThimble.Closure.Value.ToString();
+            ValuePinkyRightClosure.Text += _rightPinkyThimble.Closure.Value.ToString();
 
             ValueIndexLeftClosure.Text = _leftIndexThimble.Closure.Value.ToString();
             ValueThumbLeftClosure.Text = _leftThumbThimble.Closure.Value.ToString();
             ValueThumbLeftAbduction.Text = _leftThumbThimble.Abduction.Value.ToString();
             ValueMiddleLeftClosure.Text = _leftMiddleThimble.Closure.Value.ToString();
+            ValueAnnularLeftClosure.Text = _leftAnnularThimble.Closure.Value.ToString();
+            ValuePinkyRightClosure.Text = _leftPinkyThimble.Closure.Value.ToString();
         }
 
         #endregion
@@ -312,7 +346,9 @@ namespace WEART_API_Integration
                 Gyro_Y.Text = data.Gyroscope.Y.ToString();
                 Gyro_Y.Text = data.Gyroscope.Z.ToString();
 
-                TimeOfFlight.Text = data.TimeOfFlight.Distance.ToString();
+                // Only available for TouchDIVER (G1)
+                if(_deviceGeneration == DeviceGeneration.TD)
+                    TimeOfFlight.Text = data.TimeOfFlight.Distance.ToString();
 
                 LastSampleTime.Text = data.Timestamp.ToString("yyyy/MM/dd HH:mm:ss.fff");
             });
@@ -376,7 +412,7 @@ namespace WEART_API_Integration
             // create texture component
             Texture texture = Texture.Default;
             texture.Active = true;
-            texture.TextureType = TextureType.ProfiledAluminiumMeshFast;
+            texture.TextureType = TextureType.ProfiledAluminiumMedium;
 
             // effect set proporties 
             _effect.Set(temperature, force, texture);
@@ -402,7 +438,7 @@ namespace WEART_API_Integration
             // create texture component
             Texture texture = Texture.Default;
             texture.Active = true;
-            texture.TextureType = TextureType.ProfiledAluminiumMeshFast;
+            texture.TextureType = TextureType.ProfiledAluminiumMedium;
 
             // effect set proporties
             _effect.Set(temperature, force, texture);
@@ -427,7 +463,7 @@ namespace WEART_API_Integration
             // create texture component
             Texture texture = Texture.Default;
             texture.Active = true;
-            texture.TextureType = TextureType.ProfiledAluminiumMeshFast;
+            texture.TextureType = TextureType.ProfiledAluminiumFast;
 
             // effect set proporties
             _effect.Set(temperature, force, texture);
@@ -456,6 +492,20 @@ namespace WEART_API_Integration
         private void ButtonStopRawData_Click(object sender, RoutedEventArgs e)
         {
             _weartClient.StopRawData();
+        }
+
+        //Defual device TDPro
+        private DeviceGeneration _deviceGeneration = DeviceGeneration.TD_Pro;
+
+        private void DeviceGenerationChoice_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            _deviceGeneration = (DeviceGeneration)DeviceGenerationCombo.SelectedIndex;
+
+            if(LeftHand != null && RightHand != null)
+            {
+                LeftHand.SetDeviceGeneration(_deviceGeneration);
+                RightHand.SetDeviceGeneration(_deviceGeneration);
+            }
         }
     }
 }

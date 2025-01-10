@@ -10,10 +10,14 @@
 
     <Grid>
         <TextBlock x:Name="ConnectionStatus" Margin="100,20,0,0" Width="150" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold" Text="Not Connected" Foreground="Red"/>
-        <Button x:Name="StartClient" Content="Start Client" Margin="100,60,0,0" VerticalAlignment="Top" Click="StartClient_Click" IsEnabled="True"/>
-        <Button x:Name="StopClient" Content="Stop Client" Margin="230,60,0,0" VerticalAlignment="Top" Click="StopClient_Click" IsEnabled="True"/>
-        <Button x:Name="StartCalibration" Content="Calibrate" Margin="360,60,0,0" VerticalAlignment="Top" Click="StartCalibration_Click" IsEnabled="False"/>
-        <TextBlock Text="" x:Name="CalibrationStatusText" Margin="450,67,0,0" FontSize="16" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Left" Width="300"/>
+        <ComboBox x:Name="DeviceGenerationCombo" Margin="100,60,0,0" Width="146" SelectedIndex="1" SelectionChanged="DeviceGenerationChoice_SelectionChanged">
+            <ComboBoxItem>TouchDIVER</ComboBoxItem>
+            <ComboBoxItem>TouchDIVER Pro</ComboBoxItem>
+        </ComboBox>
+        <Button x:Name="StartClient" Content="Start Client" Margin="262,60,0,0" VerticalAlignment="Top" Click="StartClient_Click" IsEnabled="True"/>
+        <Button x:Name="StopClient" Content="Stop Client" Margin="372,60,0,0" VerticalAlignment="Top" Click="StopClient_Click" IsEnabled="True"/>
+        <Button x:Name="StartCalibration" Content="Calibrate" Margin="482,60,0,0" VerticalAlignment="Top" Click="StartCalibration_Click" IsEnabled="False"/>
+        <TextBlock Text="" x:Name="CalibrationStatusText" Margin="583,67,0,0" FontSize="16" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Left" Width="300"/>
 
         <StackPanel x:Name="MwStatusPanel" Orientation="Vertical" Margin="100,110,0,0" HorizontalAlignment="Left"
                     Width="350" Height="587" VerticalAlignment="Top" Spacing="10"
@@ -81,19 +85,18 @@
             <TextBlock FontSize="16" FontWeight="Bold" HorizontalAlignment="Left">
                 <Run>Right Middle Closure:</Run> <Run x:Name="ValueMiddleRightClosure" Text="0.0"/>
             </TextBlock>
-
             <TextBlock FontSize="16" FontWeight="Bold" HorizontalAlignment="Left">
-                <Run>Left Index Closure:</Run> <Run x:Name="ValueIndexLeftClosure" Text="0.0"/>
+                <Run>Right Annular Closure:</Run> <Run x:Name="ValueAnnularRightClosure" Text="0.0"/>
             </TextBlock>
             <TextBlock FontSize="16" FontWeight="Bold" HorizontalAlignment="Left">
-                <Run>Left Thumb Closure:</Run> <Run x:Name="ValueThumbLeftClosure" Text="0.0"/>
+                <Run>Right Pinky Closure:</Run> <Run x:Name="ValuePinkyRightClosure" Text="0.0"/>
             </TextBlock>
-            <TextBlock FontSize="16" FontWeight="Bold" HorizontalAlignment="Left">
-                <Run>Left Thumb Abduction:</Run> <Run x:Name="ValueThumbLeftAbduction" Text="0.0"/>
-            </TextBlock>
-            <TextBlock FontSize="16" FontWeight="Bold" HorizontalAlignment="Left">
-                <Run>Left Middle Closure:</Run> <Run x:Name="ValueMiddleLeftClosure" Text="0.0"/>
-            </TextBlock>
+            <TextBlock FontSize="16" FontWeight="Bold"><Run Text="Left Index Closure:"/><Run Text=" "/><Run x:Name="ValueIndexLeftClosure" Text="0.0"/></TextBlock>
+            <TextBlock FontSize="16" FontWeight="Bold"><Run Text="Left Thumb Closure:"/><Run Text=" "/><Run x:Name="ValueThumbLeftClosure" Text="0.0"/></TextBlock>
+            <TextBlock FontSize="16" FontWeight="Bold"><Run Text="Left Thumb Abduction:"/><Run Text=" "/><Run x:Name="ValueThumbLeftAbduction" Text="0.0"/></TextBlock>
+            <TextBlock FontSize="16" FontWeight="Bold"><Run Text="Left Middle Closure:"/><Run Text=" "/><Run x:Name="ValueMiddleLeftClosure" Text="0.0"/></TextBlock>
+            <TextBlock FontSize="16" FontWeight="Bold"><Run Text="Left Annular Closure:"/><Run Text=" "/><Run x:Name="ValueAnnularLeftClosure" Text="0.0"/></TextBlock>
+            <TextBlock FontSize="16" FontWeight="Bold"><Run Text="Left Pinky Closure:"/><Run Text=" "/><Run x:Name="ValuePinkyLeftClosure" Text="0.0"/></TextBlock>
         </StackPanel>
 
         <StackPanel Margin="840,110,0,0" HorizontalAlignment="Left" Width="416" Height="516" VerticalAlignment="Top" BorderThickness="1" BorderBrush="#CCCCCC" Padding="10">
@@ -114,6 +117,8 @@
                     <ComboBoxItem>THUMB</ComboBoxItem>
                     <ComboBoxItem>MIDDLE</ComboBoxItem>
                     <ComboBoxItem>PALM</ComboBoxItem>
+                    <ComboBoxItem>ANNULAR</ComboBoxItem>
+                    <ComboBoxItem>PINKY</ComboBoxItem>
                 </ComboBox>
             </StackPanel>
 
@@ -127,7 +132,7 @@
             <StackPanel Orientation="Horizontal" Height="40" Margin="0,0,0,0" >
                 <TextBlock Text="TRACKING RAW DATA" FontSize="20" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center"/>
             </StackPanel>
-            
+
             <StackPanel Orientation="Horizontal" Height="40" Margin="0,0,0,0" >
                 <TextBlock Text="Accelerometer (x,y,z):" FontSize="16" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                 <TextBlock x:Name="Accelerometer" FontSize="16" FontWeight="Bold" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center">
@@ -163,7 +168,7 @@
                 <TextBlock Text="NTC Temperature Raw:" FontSize="16" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                 <TextBlock Text="0" x:Name="ntcTempRawValue" FontSize="16" FontWeight="Bold" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
             </StackPanel>
-            
+
 
             <StackPanel Orientation="Horizontal" Height="40" Margin="0,0,0,0" >
                 <TextBlock Text="NTC Temperature Converted:" FontSize="16" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center"/>
