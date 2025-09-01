@@ -261,7 +261,7 @@ namespace WEART_API_Integration
             ValueThumbLeftAbduction.Text = _leftThumbThimble.Abduction.Value.ToString();
             ValueMiddleLeftClosure.Text = _leftMiddleThimble.Closure.Value.ToString();
             ValueAnnularLeftClosure.Text = _leftAnnularThimble.Closure.Value.ToString();
-            ValuePinkyRightClosure.Text = _leftPinkyThimble.Closure.Value.ToString();
+            ValuePinkyLeftClosure.Text = _leftPinkyThimble.Closure.Value.ToString();
         }
 
         #endregion
