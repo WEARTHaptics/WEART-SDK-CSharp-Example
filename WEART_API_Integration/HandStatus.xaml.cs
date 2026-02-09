@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using WeArt.Core;
 using WeArt.Messages;
 using Windows.UI;
@@ -58,6 +59,9 @@ namespace WEART_API_Integration
                 BatteryIconCharging.Visibility = charging ? Visibility.Visible : Visibility.Collapsed;
                 BatteryIconNotCharging.Visibility = !charging ? Visibility.Visible : Visibility.Collapsed;
                 BatteryLevelText.Text = Device != null ? Device?.BatteryLevel.ToString() : "";
+
+                // Render last sensors calibration date
+                CalibrationDateText.Text = "";
             }
             else if (DeviceGeneration == DeviceGeneration.TD_Pro)
             {
@@ -71,6 +75,21 @@ namespace WEART_API_Integration
                 BatteryIconCharging.Visibility = charging ? Visibility.Visible : Visibility.Collapsed;
                 BatteryIconNotCharging.Visibility = !charging ? Visibility.Visible : Visibility.Collapsed;
                 BatteryLevelText.Text = TouchDiverPro != null ? TouchDiverPro?.Master.BatteryLevel.ToString() : "";
+
+                // Render last sensors calibration date
+                if (TouchDiverPro == null || !Connected)
+                {
+                    CalibrationDateText.Text = "";
+                }
+                else if (TouchDiverPro.SensorsCalibDate == DateTime.MinValue)
+                {
+                    CalibrationDateText.Text = "Not calibrated";
+                }
+                else
+                {
+                    CalibrationDateText.Text =
+                        $"Last calib: {TouchDiverPro.SensorsCalibDate:dd/MM/yyyy}";
+                }
             }
 
             ScaleTransform handScale = new ScaleTransform();

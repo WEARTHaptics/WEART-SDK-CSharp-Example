@@ -165,27 +165,6 @@
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
-    <Content Include="WEART_SDK_C_SHARP\.gitignore" />
-    <Content Include="WEART_SDK_C_SHARP\docs\doxygen-awesome\doxygen-awesome-darkmode-toggle.js" />
-    <Content Include="WEART_SDK_C_SHARP\docs\doxygen-awesome\doxygen-awesome-fragment-copy-button.js" />
-    <Content Include="WEART_SDK_C_SHARP\docs\doxygen-awesome\doxygen-awesome-interactive-toc.js" />
-    <Content Include="WEART_SDK_C_SHARP\docs\doxygen-awesome\doxygen-awesome-paragraph-link.js" />
-    <Content Include="WEART_SDK_C_SHARP\docs\doxygen-awesome\doxygen-awesome-sidebar-only-darkmode-toggle.css" />
-    <Content Include="WEART_SDK_C_SHARP\docs\doxygen-awesome\doxygen-awesome-sidebar-only.css" />
-    <Content Include="WEART_SDK_C_SHARP\docs\doxygen-awesome\doxygen-awesome-tabs.js" />
-    <Content Include="WEART_SDK_C_SHARP\docs\doxygen-awesome\doxygen-awesome.css" />
-    <Content Include="WEART_SDK_C_SHARP\docs\doxygen-awesome\doxygen-custom\custom-alternative.css" />
-    <Content Include="WEART_SDK_C_SHARP\docs\doxygen-awesome\doxygen-custom\custom.css" />
-    <Content Include="WEART_SDK_C_SHARP\docs\doxygen-awesome\doxygen-custom\header.html" />
-    <Content Include="WEART_SDK_C_SHARP\docs\doxygen-awesome\doxygen-custom\toggle-alternative-theme.js" />
-    <Content Include="WEART_SDK_C_SHARP\docs\doxygen-awesome\img-zoom-modal.js" />
-    <Content Include="WEART_SDK_C_SHARP\docs\img\architecture.svg" />
-    <Content Include="WEART_SDK_C_SHARP\docs\img\example_app\ExampleApp_MiddlewareStatus.png" />
-    <Content Include="WEART_SDK_C_SHARP\docs\img\example_app\ExampleApp_RawData.png" />
-    <Content Include="WEART_SDK_C_SHARP\docs\img\example_app\ExampleApp_Screen.png" />
-    <Content Include="WEART_SDK_C_SHARP\docs\img\logo\weart_dark.png" />
-    <Content Include="WEART_SDK_C_SHARP\docs\img\logo\weart_light.png" />
-    <Content Include="WEART_SDK_C_SHARP\docs\weart.png" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -214,13 +193,6 @@
     <PackageReference Include="System.Text.Json">
       <Version>9.0.0</Version>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="WEART_SDK_C_SHARP\docs\example.md" />
-    <None Include="WEART_SDK_C_SHARP\docs\home.md" />
-    <None Include="WEART_SDK_C_SHARP\docs\upgrade.md" />
-    <None Include="WEART_SDK_C_SHARP\Doxyfile" />
-    <None Include="WEART_SDK_C_SHARP\README.md" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

@@ -2,6 +2,15 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [1.4.0]
+ 
+### Added
+* Last sensors calibration date
+
+### Changed
+* Solved "pinky right closure" rendering bug
+* CHANGELOG.md
+
 ## [1.3.0]
  
 ### Added

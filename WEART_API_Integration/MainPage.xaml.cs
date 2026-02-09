@@ -254,7 +254,7 @@ namespace WEART_API_Integration
             ValueThumbRightAbduction.Text = _rightThumbThimble.Abduction.Value.ToString();
             ValueMiddleRightClosure.Text = _rightMiddleThimble.Closure.Value.ToString();
             ValueAnnularRightClosure.Text = _rightAnnularThimble.Closure.Value.ToString();
-            ValuePinkyRightClosure.Text += _rightPinkyThimble.Closure.Value.ToString();
+            ValuePinkyRightClosure.Text = _rightPinkyThimble.Closure.Value.ToString();
 
             ValueIndexLeftClosure.Text = _leftIndexThimble.Closure.Value.ToString();
             ValueThumbLeftClosure.Text = _leftThumbThimble.Closure.Value.ToString();
