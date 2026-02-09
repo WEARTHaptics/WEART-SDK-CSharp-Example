@@ -352,4 +352,4 @@ private void UpdateDevicesStatus(MiddlewareStatusUpdate statusUpdate)
 
 ## Copyright
 
-Copyright &copy; 2024 Weart S.r.l.
+Copyright &copy; 2026 Weart S.r.l.
